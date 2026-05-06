@@ -5,7 +5,7 @@
  * player with smooth lerp and clamps to world bounds.
  */
 
-import { getWorldPixelSize, getGrid, getTileSize, TILE, WORLD_W } from "./world.js";
+import { getWorldPixelSize, getGrid, getTileSize, TILE } from "./world.js";
 
 /**
  * Creates a camera object that tracks the player.
@@ -59,7 +59,7 @@ export function drawTiles(ctx, camera, canvasW, canvasH) {
 
   for (let y = sy; y < ey; y++) {
     for (let x = sx; x < ex; x++) {
-      const tile = grid[y * WORLD_W + x];
+      const tile = grid[y * 120 + x];
       const px = x * tileSize - camera.x;
       const py = y * tileSize - camera.y;
 

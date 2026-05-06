@@ -13,7 +13,6 @@ import { createPlayer, updatePlayer, swordAttack, takeDamage, isShieldBlocking }
 import { spawnEnemies, updateEnemy, hitEnemy, checkEnemyDeath, rollDrop } from "./enemies.js";
 import { generateStartingItems, checkPickup, getHoveredItem, swapItem } from "./items.js";
 import { getInput } from "./input.js";
-import { setupTouchControls, isTouchDevice } from "./touch.js";
 
 // ─── Game State ─────────────────────────────────────────────────────
 const game = {
@@ -125,10 +124,6 @@ function update(dt) {
 function step(dt) {
   const input = getInput();
   const player = game.player;
-
-  // Sync touch aim to mouse coordinates for reticle/HUD
-  game.mouseX = input.aimX;
-  game.mouseY = input.aimY;
 
   // Update player
   updatePlayer(player, input, dt);
@@ -284,15 +279,15 @@ function render() {
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
-  const dpr = Math.min(devicePixelRatio || 1, 2);
-  const w = canvas.width / dpr;
-  const h = canvas.height / dpr;
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // Set canvas resolution
+  const dpr = devicePixelRatio || 1;
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  ctx.scale(dpr, dpr);
 
   // Clear
   ctx.fillStyle = "#2a2218";
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
   if (game.state === "gameover") {
     drawGameOver(ctx, game.gameOverTime);
@@ -302,7 +297,7 @@ function render() {
   const camera = game.camera;
 
   // Draw tiles
-  drawTiles(ctx, camera, w, h);
+  drawTiles(ctx, camera, canvas.width / dpr, canvas.height / dpr);
 
   // Draw ground items
   for (const item of game.groundItems) {
@@ -335,22 +330,10 @@ function render() {
 }
 
 // ─── Resize Handler ─────────────────────────────────────────────────
-let lastCanvasW = 0;
-let lastCanvasH = 0;
-
 function onResize() {
-  const dpr = Math.min(devicePixelRatio || 1, 2);
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-
-  // Only resize when dimensions actually change
-  if (w === lastCanvasW && h === lastCanvasH) return;
-  lastCanvasW = w;
-  lastCanvasH = h;
-
   const canvas = document.getElementById("game");
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
+  canvas.width = window.innerWidth * (devicePixelRatio || 1);
+  canvas.height = window.innerHeight * (devicePixelRatio || 1);
 }
 
 // ─── Visibility Pause ───────────────────────────────────────────────
@@ -365,10 +348,6 @@ document.addEventListener("visibilitychange", () => {
 });
 
 // ─── Init ───────────────────────────────────────────────────────────
-if (isTouchDevice) {
-  document.getElementById("touch-controls").classList.add("active");
-  setupTouchControls();
-}
 window.addEventListener("resize", onResize);
 setupInput();
 initWorld();

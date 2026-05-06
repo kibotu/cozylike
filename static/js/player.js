@@ -35,6 +35,7 @@ const DEFAULT_SHIELD = {
  * Creates a fresh player state object.
  */
 export function createPlayer(worldSpawnX, worldSpawnY) {
+  const TILE_SIZE = 32;
   const px = worldSpawnX * TILE_SIZE + TILE_SIZE / 2;
   const py = worldSpawnY * TILE_SIZE + TILE_SIZE / 2;
 
@@ -99,7 +100,7 @@ function collidesAt(x, y, radius) {
 
   for (let ty = minY; ty <= maxY; ty++) {
     for (let tx = minX; tx <= maxX; tx++) {
-      const tile = grid[ty * WORLD_W + tx];
+      const tile = grid[ty * 120 + tx];
       if (tile === TILE.TREE || tile === TILE.ROCK) {
         const tileCenterX = tx * TILE_SIZE + TILE_SIZE / 2;
         const tileCenterY = ty * TILE_SIZE + TILE_SIZE / 2;
@@ -209,8 +210,9 @@ export function updatePlayer(player, input, dt) {
     // Try combined movement + knockback
     let newX = player.x + wasdx * player.speed * (dt / 1000) + player.knockbackX;
     let newY = player.y + wasdy * player.speed * (dt / 1000) + player.knockbackY;
-    const worldW = WORLD_W * TILE_SIZE;
-    const worldH = WORLD_H * TILE_SIZE;
+    const TILE_SIZE = 32;
+    const worldW = 120 * TILE_SIZE;
+    const worldH = 90 * TILE_SIZE;
     const r = player.radius;
     newX = Math.max(r, Math.min(worldW - r, newX));
     newY = Math.max(r, Math.min(worldH - r, newY));
@@ -268,6 +270,7 @@ export function swordAttack(player, enemies) {
     if (Math.abs(angleDiff) > arcHalf) continue;
 
     // Check if tile between player and enemy blocks hitbox
+    const TILE_SIZE = 32;
     const steps = Math.ceil(dist / TILE_SIZE);
     let blocked = false;
     for (let i = 1; i < steps; i++) {
@@ -276,9 +279,9 @@ export function swordAttack(player, enemies) {
       const cy = player.y + dy * t;
       const tx = Math.floor(cx / TILE_SIZE);
       const ty = Math.floor(cy / TILE_SIZE);
-      if (tx < 0 || tx >= WORLD_W || ty < 0 || ty >= WORLD_H) continue;
+      if (tx < 0 || tx >= 120 || ty < 0 || ty >= 90) continue;
       const grid = getGrid();
-      const tile = grid[ty * WORLD_W + tx];
+      const tile = grid[ty * 120 + tx];
       if (tile === TILE.TREE || tile === TILE.ROCK) {
         blocked = true;
         break;

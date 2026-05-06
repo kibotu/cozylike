@@ -3,8 +3,8 @@
  */
 
 import { rollSword as rollSwordItem, rollShield as rollShieldItem, rollDrop as rollDropEnemy } from "./enemies.js";
-import { TILE_SIZE } from "./world.js";
 
+const TILE_SIZE = 32;
 const PICKUP_RADIUS = 20; // auto-collect heart radius
 const SWAP_RADIUS = 50;  // hover prompt radius
 
