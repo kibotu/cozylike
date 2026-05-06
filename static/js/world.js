@@ -312,6 +312,7 @@ export function blocksHitbox(px, py) {
   const tx = Math.floor(px / TILE_SIZE);
   const ty = Math.floor(py / TILE_SIZE);
   if (tx < 0 || tx >= WORLD_W || ty < 0 || ty >= WORLD_H) return true;
+  const grid = getGrid();
   const tile = grid[ty * WORLD_W + tx];
   return tile === TILE.TREE || tile === TILE.ROCK;
 }

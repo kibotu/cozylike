@@ -2,12 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cozy Roguelite</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <canvas id="game"></canvas>
+  <canvas id="touch-canvas"></canvas>
+  <div id="touch-controls">
+    <div id="dpad">
+      <div class="dpad-btn" id="dpad-up">↑</div>
+      <div class="dpad-btn" id="dpad-down">↓</div>
+      <div class="dpad-btn" id="dpad-left">←</div>
+      <div class="dpad-btn" id="dpad-right">→</div>
+    </div>
+    <div id="touch-actions">
+      <div class="touch-btn" id="touch-attack">⚔</div>
+      <div class="touch-btn" id="touch-shield">🛡</div>
+    </div>
+  </div>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

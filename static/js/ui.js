@@ -8,24 +8,35 @@ const FONT = "system-ui, -apple-system, sans-serif";
 const FONT_SIZE = 14;
 
 /**
+ * Detects if we're on a mobile/touch device for HUD scaling.
+ */
+function isMobile() {
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.innerWidth < 600;
+}
+
+/**
  * Draws the HUD (hearts, stamina bar, equipped items, kill counter).
  */
 export function drawHUD(ctx, player, kills) {
   ctx.save();
-  ctx.font = `${FONT_SIZE}px ${FONT}`;
+
+  const mobile = isMobile();
+  const heartSize = mobile ? 11 : 14;
+  const fontSize = mobile ? 12 : FONT_SIZE;
+  ctx.font = `${fontSize}px ${FONT}`;
   ctx.textBaseline = "top";
 
   // Hearts (top-left)
-  drawHearts(ctx, player);
+  drawHearts(ctx, player, heartSize);
 
   // Stamina bar (below hearts)
-  drawStaminaBar(ctx, player);
+  drawStaminaBar(ctx, player, mobile);
 
   // Equipped items (bottom-left)
-  drawEquippedItems(ctx, player);
+  drawEquippedItems(ctx, player, mobile);
 
   // Kill counter (bottom-right)
-  drawKillCounter(ctx, kills);
+  drawKillCounter(ctx, kills, mobile);
 
   ctx.restore();
 }
@@ -33,9 +44,8 @@ export function drawHUD(ctx, player, kills) {
 /**
  * Draws the hearts row.
  */
-function drawHearts(ctx, player) {
+function drawHearts(ctx, player, heartSize) {
   const totalHearts = player.maxHp * 2; // half-hearts
-  const heartSize = 14;
   const gap = 4;
   const startX = 12;
   const startY = 12;
@@ -77,11 +87,11 @@ function drawHearts(ctx, player) {
 /**
  * Draws the stamina bar.
  */
-function drawStaminaBar(ctx, player) {
-  const barWidth = 120;
-  const barHeight = 8;
+function drawStaminaBar(ctx, player, mobile) {
+  const barWidth = mobile ? 80 : 120;
+  const barHeight = mobile ? 6 : 8;
   const x = 12;
-  const y = 42;
+  const y = 12 + (player.maxHp * 14) + 4;
 
   // Background
   ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
@@ -95,18 +105,20 @@ function drawStaminaBar(ctx, player) {
 
   // Label
   ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-  ctx.font = `${FONT_SIZE}px ${FONT}`;
+  ctx.font = `${mobile ? 12 : FONT_SIZE}px ${FONT}`;
   ctx.fillText("Shield", x + barWidth + 6, y - 1);
 }
 
 /**
  * Draws equipped item names (bottom-left).
  */
-function drawEquippedItems(ctx, player) {
-  const y = window.innerHeight - 40;
+function drawEquippedItems(ctx, player, mobile) {
+  const bottomMargin = mobile ? 100 : 40;
+  const y = window.innerHeight - bottomMargin;
+  const fontSize = mobile ? 11 : FONT_SIZE;
 
   ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-  ctx.font = `${FONT_SIZE}px ${FONT}`;
+  ctx.font = `${fontSize}px ${FONT}`;
   ctx.fillText(`⚔ ${player.sword.name}`, 12, y);
   ctx.fillText(`🛡 ${player.shield.name}`, 12, y + 18);
 }
@@ -114,14 +126,15 @@ function drawEquippedItems(ctx, player) {
 /**
  * Draws the kill counter (bottom-right).
  */
-function drawKillCounter(ctx, kills) {
+function drawKillCounter(ctx, kills, mobile) {
   const w = window.innerWidth;
   const h = window.innerHeight;
-  const x = w - 100;
-  const y = h - 40;
+  const bottomMargin = mobile ? 100 : 40;
+  const x = Math.min(w - 100, w - 100);
+  const y = h - bottomMargin;
 
   ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-  ctx.font = `${FONT_SIZE}px ${FONT}`;
+  ctx.font = `${mobile ? 11 : FONT_SIZE}px ${FONT}`;
   ctx.fillText(`Enemies: ${kills}`, x, y);
 }
 
