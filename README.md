@@ -2,6 +2,8 @@
 
 A top-down action roguelite — no build step, no framework, no external assets. Just a canvas, a game loop, and a lot of procedural variance.
 
+Almost entirely generated in one shot from [spec.md](spec.md) using [Qwen3.6-35B-A3B](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF?show_file_info=Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf) (~2 bit). on Nvidia RTX 4080 with 16GB VRAM in about ~20min.
+
 ![cozylike](screenshot.png)
 
 ## Features
@@ -74,6 +76,10 @@ static/js/ui.js        — HUD (hearts, stamina, kills, equipped items, tooltips
 
 See `AGENTS.md` for a living list of gotchas (dead code, duplicate functions, hardcoded constants).
 
+## Support
+
+If you find this interesting, consider [buying me a coffee](https://buymeacoffee.com/kibotu).  
+
 ## License
 
-None. Do whatever you want with it.
+See [LICENSE](LICENSE) file.
